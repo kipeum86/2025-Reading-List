@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 Reading List Dashboard</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Reset & Layout --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            /* Palette: Antique Walnut & Gold */
+            --wood-primary: #5c4033;  /* Deep Walnut */
+            --wood-light: #7b5845;    /* Highlight */
+            --wood-dark: #3e2b22;     /* Shadow */
+            
+            --wall-bg: #151515;       /* Darker Wall for contrast */
+            --gold-accent: #c5a059;   /* Muted Metallic Gold */
+            --gold-bright: #ebd5a0;   /* Bright Gold Highlight */
+            
+            --text-dark: #222;
+            --text-light: #e0e0e0;
+            --star-color: #cd7f32;    
+            
+            --shadow-soft: rgba(0, 0, 0, 0.4);
+            --shadow-deep: rgba(0, 0, 0, 0.7);
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: var(--wall-bg);
+            /* Leather Texture */
+            background-image: url("https://www.transparenttextures.com/patterns/dark-leather.png");
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto; 
+            overflow-x: hidden;
+        }
+
+        /* --- Refined Header (Sophisticated Look) --- */
+        header { 
+            padding: 2rem 1rem; 
+            text-align: center; 
+            position: relative; 
+            z-index: 10; 
+            flex-shrink: 0;
+            margin-bottom: 2rem;
+            /* Glass/Dark Panel Effect */
+            background: linear-gradient(to bottom, rgba(10,10,10,0.9), rgba(20,20,20,0.8));
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        header h1 { 
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 2.8rem;
+            color: var(--gold-accent);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 0.5rem;
+            /* Text Gradient for Gold Effect */
+            background: linear-gradient(to right, #aa853a, #ebd5a0, #aa853a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+        }
+
+        .guide-text {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: #888;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            margin-bottom: 3rem; /* 기존 1.8rem에서 3rem으로 간격 확대 */
+        }
+
+        /* --- Restored & Styled Buttons --- */
+        .header-links {
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            align-items: center;
+            gap: 1rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .header-links a { 
+            position: relative;
+            color: var(--gold-accent); 
+            text-decoration: none; 
+            font-size: 0.75rem; 
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            
+            /* Button Style */
+            padding: 0.6rem 1.2rem;
+            border: 1px solid rgba(197, 160, 89, 0.4);
+            background: rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+        
+        /* Hover Effect: Fill with gold, dark text */
+        .header-links a:hover { 
+            background: var(--gold-accent);
+            color: #1a1a1a;
+            border-color: var(--gold-bright);
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* --- Main Shelf Scene --- */
+        .shelf-scene {
+            flex-grow: 1;
+            position: relative;
+            z-index: 5;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 4rem 4rem; 
+            
+            /* Cabinet Structure */
+            background: #2a1d17; 
+            box-shadow: 
+                0 20px 50px rgba(0,0,0,0.8), 
+                inset 0 0 100px rgba(0,0,0,0.9);
+            
+            /* Frame Borders */
+            border-top: 15px solid var(--wood-dark);
+            border-left: 20px solid var(--wood-primary);
+            border-right: 20px solid var(--wood-primary);
+            border-radius: 4px 4px 0 0;
+        }
+        
+        /* Top Decoration */
+        .shelf-scene::before {
+            content: '';
+            position: absolute;
+            top: -25px; left: -25px; right: -25px;
+            height: 25px;
+            background: linear-gradient(to bottom, var(--wood-light), var(--wood-dark));
+            box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+            border-radius: 2px;
+        }
+
+        /* --- Responsive Styles (Mobile Fixes Here) --- */
+        @media (max-width: 768px) {
+            header h1 { font-size: 2rem; }
+            
+            /* [FIX] Reduce Padding to prevent overflow overlap */
+            .shelf-scene {
+                padding: 1rem 0.2rem 2rem; /* Reduced side padding */
+                border-width: 12px !important; /* Force thinner borders on mobile */
+                max-width: 95%;
+            }
+            .shelf-scene::before { left: -12px; right: -12px; }
+            .header-links { gap: 0.5rem; }
+            .header-links a { padding: 0.5rem 0.8rem; font-size: 0.65rem; }
+            
+            /* [FIX] Reduce Card Size Further and Center them */
+            .card { width: 72px; } /* Reduced from 80px to 72px */
+            .book-slot { margin: 0 !important; } /* Removed margin, using gap instead */
+            
+            /* [FIX] Center align books and use gap to prevent spreading to edges */
+            .shelf-row {
+                justify-content: center !important; /* Force center alignment */
+                gap: 12px !important; /* Fixed gap between books */
+                padding: 1.5rem 0 0.8rem !important; /* Remove side padding from row */
+            }
+
+            /* --- [FIX] Mobile Text Scaling --- */
+            .card-back {
+                padding: 0.3rem !important;
+                /* Ensure vertical centering */
+                justify-content: center !important;
+            }
+            
+            .book-title {
+                font-size: 0.55rem !important;
+                margin-bottom: 0.2rem !important;
+                line-height: 1.1 !important;
+            }
+            
+            .book-author {
+                font-size: 0.4rem !important;
+                margin-bottom: 0.3rem !important;
+                letter-spacing: 0px !important; 
+            }
+            
+            .book-rating {
+                font-size: 0.5rem !important;
+                letter-spacing: 1px !important;
+                /* [NEW] Vertical layout for stars and number */
+                display: flex;
+                flex-direction: column !important; /* Stack vertically */
+                justify-content: center;
+                align-items: center;
+                gap: 0px !important; /* Tighter gap for mobile */
+            }
+
+            /* [NEW] Mobile Rating Number */
+            .rating-num {
+                font-size: 0.9em; /* Relative to parent font size */
+                color: #888;
+                font-weight: 400;
+                margin-top: 2px;
+            }
+            
+            .book-date {
+                font-size: 0.4rem !important;
+                padding-top: 0.2rem !important;
+                /* [FIX] Remove auto margin to prevent sticking to bottom */
+                margin-top: 0.4rem !important; 
+            }
+
+            .divider-tiny {
+                width: 10px !important;
+                margin: 0.2rem 0 !important;
+            }
+            
+            .empty-slot {
+                width: 72px !important; /* Match card width */
+                margin: 0 !important;
+            }
+        }
+
+        .bookshelf {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .bookshelf.fade-out {
+            opacity: 0;
+            transform: translateY(15px) scale(0.98);
+        }
+
+        /* --- Shelf Rows --- */
+        .shelf-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            padding: 2.5rem 2rem 1.2rem;
+            margin-bottom: 0;
+            position: relative;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 80%, transparent 100%);
+        }
+
+        .shelf-row::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: -20px; right: -20px;
+            height: 20px;
+            z-index: 2;
+            background: linear-gradient(to bottom, #6d4c41, #3e2723);
+            border-top: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+        }
+
+        @media (max-width: 768px) {
+            .shelf-row::after { left: -10px; right: -10px; }
+        }
+
+        /* --- Book Items --- */
+        .book-slot {
+            position: relative;
+            z-index: 10;
+            margin: 0 15px;
+            -webkit-box-reflect: below 2px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.7, transparent), to(rgba(255,255,255,0.15)));
+        }
+
+        /* [NEW] Class for empty slots to allow responsive sizing */
+        .empty-slot {
+            width: 130px;
+            margin: 0 15px;
+        }
+
+        .card {
+            width: 130px;
+            aspect-ratio: 2 / 3;
+            position: relative;
+            perspective: 1200px;
+            cursor: pointer;
+            transform-origin: center bottom;
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            z-index: 20;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 5px 5px 15px var(--shadow-deep);
+        }
+
+        .card.active .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute; inset: 0;
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            border-radius: 2px 5px 5px 2px;
+            overflow: hidden;
+        }
+
+        .card-front {
+            background-color: #111;
+            background-size: cover; 
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: var(--bg-image);
+        }
+        
+        .card-front::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0.2) 0%, 
+                rgba(255,255,255,0) 6%, 
+                rgba(0,0,0,0) 94%, 
+                rgba(0,0,0,0.3) 100%);
+            pointer-events: none;
+        }
+
+        /* --- Card Back --- */
+        .card-back {
+            background-color: #fdfbf7;
+            color: var(--text-dark);
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #dcdcdc;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .book-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+            color: #111;
+            word-break: break-word;
+        }
+        
+        .divider-tiny {
+            width: 20px; height: 1px; 
+            background: var(--gold-accent); 
+            margin: 0.5rem 0;
+        }
+        
+        .book-author {
+            font-size: 0.75rem;
+            color: #555;
+            font-style: italic;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .book-rating {
+            font-size: 0.9rem;
+            color: var(--star-color); 
+            font-weight: 700;
+            letter-spacing: 2px;
+            /* [NEW] Desktop layout: Stacked as well for consistency */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2px;
+        }
+
+        /* [NEW] Style for Numeric Rating */
+        .rating-num {
+            font-size: 0.75em; /* Slightly smaller for elegance */
+            color: #aaa;
+            font-weight: 400;
+            letter-spacing: 0;
+            font-family: 'Lato', sans-serif;
+            margin-top: 2px;
+        }
+        
+        .book-date {
+            font-size: 0.65rem;
+            color: #999;
+            margin-top: auto;
+            font-family: 'Lato', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding-top: 0.5rem;
+        }
+
+        /* --- Controls --- */
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin: 3rem 0;
+            z-index: 10;
+        }
+        
+        .nav-btn {
+            background: transparent;
+            border: 1px solid #555;
+            color: #888;
+            padding: 0.6rem 2rem;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover:not(:disabled) {
+            border-color: var(--gold-accent);
+            color: var(--gold-bright);
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.2);
+            background: rgba(197, 160, 89, 0.1);
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            border-color: #333;
+        }
+        
+        .page-indicator {
+            font-family: 'Cinzel', serif;
+            color: #666;
+            font-size: 1rem;
+            letter-spacing: 3px;
+        }
+        .page-indicator span {
+            color: var(--gold-accent);
+        }
+
+        .floor {
+            height: 60px;
+            background: linear-gradient(to bottom, #111, #000);
+            border-top: 4px solid #222;
+            flex-shrink: 0;
+            margin-top: auto;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>My 2025 Reading List</h1>
+        <span class="guide-text">
+            Scroll to explore the gallery / Click a book for details
+        </span>
+        
+        <!-- Restored & Styled Buttons -->
+        <nav class="header-links">
+            <a href="https://www.goodreads.com/kipeumlee" target="_blank">My Goodreads Page</a>
+            <a href="https://www.goodreads.com/user/year_in_books/2024/28671159" target="_blank">2024 Reading List</a>
+            <a href="https://codepen.io/Kipeum-Lee/full/qEdJJXa" target="_blank">Book Summaries</a>
+            <a href="https://codepen.io/Kipeum-Lee/full/VYLVBRE" target="_blank">Dashboard Archives</a>
+            <a href="https://docs.google.com/spreadsheets/d/1-dPPadblXmXvW5V68gW5ENp9wdWxC3P3II6ZV0liRbg/edit#gid=723314194" target="_blank">Prompt List</a>
+            <a href="https://codepen.io/Kipeum-Lee/full/GgJXPBm" target="_blank">Arcade Zone</a>
+        </nav>
+    </header>
+
+    <!-- Main Shelf Area -->
+    <main class="shelf-scene">
+        <div class="bookshelf" id="bookshelf-grid">
+            <!-- Books injected via JS -->
+        </div>
+    </main>
+
+    <!-- Pagination -->
+    <div class="controls">
+        <button class="nav-btn" id="prev-btn">Previous</button>
+        <div class="page-indicator" id="page-indicator"><span>1</span> / 1</div>
+        <button class="nav-btn" id="next-btn">Next</button>
+    </div>
+    
+    <div class="floor"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Data
+            const bookData = [
+             { title: '하늘과 바람과 별과 인간', author: '김상욱', date: '2025. 12. 10.', rating: 3.9, imageUrl: 'https://imgur.com/KE9FVF3.png' },
+             { title: 'Why We Love Baseball', author: 'Joe Posnanski', date: '2025. 12. 4.', rating: 4.5, imageUrl: 'https://imgur.com/dat8DI9.png' },
+             { title: 'The Art of Spending Money', author: 'Morgan Housel', date: '2025. 11. 27.', rating: 3.4, imageUrl: 'https://imgur.com/HTNpUep.png' }, 
+             { title: '처음 만나는 양자의 세계', author: '채은미', date: '2025. 11. 25.', rating: 3.9, imageUrl: 'https://imgur.com/ufnHbmF.png' }, 
+             { title: 'AI를 활용한 법률문서 작성법', author: '김종엽', date: '2025. 11. 17.', rating: 3.8, imageUrl: 'https://imgur.com/6Udw2BL.png' }, 
+             { title: 'The Comfort Crisis', author: 'Michael Easter', date: '2025. 11. 13.', rating: 3.6, imageUrl: 'https://imgur.com/wUFf6ah.png' },
+             { title: '김변호사의 스마트한 AI 활용법', author: '김변호사 팀', date: '2025. 11. 11.', rating: 2.6, imageUrl: 'https://imgur.com/tap4gzV.png' },
+             { title: '1%를 읽는 힘', author: '메르', date: '2025. 10. 30.', rating: 3.7, imageUrl: 'https://imgur.com/soW6hqi.png' },
+             { title: 'Money: A Story of Humanity', author: 'David McWilliams', date: '2025. 10. 28.', rating: 4.7, imageUrl: 'https://imgur.com/UyuBeHc.png' },
+             { title: '시대예보:경량문명의 탄생', author: '송길영', date: '2025. 10. 24.', rating: 3.0, imageUrl: 'https://imgur.com/cQcbdki.png' }, 
+             { title: '고수의 M&A 바이블', author: '장현희', date: '2025. 10. 21.', rating: 3.4, imageUrl: 'https://imgur.com/agwaXU6.png' }, 
+             { title: '호의에 대하여', author: '문형배', date: '2025. 10. 1.', rating: 3.7, imageUrl: 'https://imgur.com/DS4eRb1.png' }, 
+             { title: '혼모노', author: '성해나', date: '2025. 9. 24.', rating: 3.8, imageUrl: 'https://imgur.com/NxUpJ8A.png' },
+             { title: '자본주의', author: 'EBS 자본주의 제작팀', date: '2025. 9. 19.', rating: 3.2, imageUrl: 'https://imgur.com/0wfS0yN.png' },
+             { title: 'Blind Robbery!', author: 'Phillipp Bagus', date: '2025. 9. 13.', rating: 4.0, imageUrl: 'https://imgur.com/aeN7yzS.png' },
+             { title: '생존을 위한 최소한의 지리', author: '최준영', date: '2025. 9. 5.', rating: 3.7, imageUrl: 'https://imgur.com/FEM6SEr.png' },
+             { title: 'Apple in China', author: 'Patrick McGee', date: '2025. 9. 3.', rating: 4.2, imageUrl: 'https://imgur.com/RGwQDbN.png' },
+             { title: 'AI 에이전트 생태계', author: '조쉬(이주환)', date: '2025. 8. 26.', rating: 4.5, imageUrl: 'https://imgur.com/9Az6PEk.png' },
+             { title: 'AI 전쟁 2.0', author: '하정우, 한상기', date: '2025. 8. 3.', rating: 3.6, imageUrl: 'https://imgur.com/RIdkLcf.png' },
+             { title: '행복의 기원', author: '서은국', date: '2025. 1. 2.', rating: 3.4, imageUrl: 'https://imgur.com/hL7owsc.png' },
+             { title: '궤도의 과학 허세', author: '궤도', date: '2025. 1. 3.', rating: 3, imageUrl: 'https://i.imgur.com/PSeHaiL.png' },
+             { title: '우리 기업을 위한 미국소송 실무가이드', author: '법무법인 태평양', date: '2025. 1. 9.', rating: 3.7, imageUrl: 'https://i.imgur.com/YQGUeLT.png' },
+             { title: 'Autocracy Inc', author: 'Anne Applebaum', date: '2025. 1. 11.', rating: 4, imageUrl: 'https://imgur.com/P5VIBJm.jpeg' },
+             { title: 'East of Eden', author: 'John Steinbeck', date: '2025. 1. 21.', rating: 4.8, imageUrl: 'https://i.imgur.com/tySiIoL.jpeg' },
+             { title: '할말하는 주주', author: '김규식', date: '2025. 1. 23.', rating: 3.8, imageUrl: 'https://i.imgur.com/4HXQBqE.png' },
+             { title: '침묵을 배우는 시간', author: '코르넬리아 토프', date: '2025. 2. 4.', rating: 3.3, imageUrl: 'https://i.imgur.com/tsVe9mR.png' },
+             { title: 'The Narrow Corridor', author: 'Daron Acemoglu', date: '2025. 2. 24.', rating: 4.8, imageUrl: 'https://i.imgur.com/yqGihmY.jpeg' },
+             { title: 'The Nvidia Way', author: 'Tae Kim', date: '2025. 2. 25.', rating: 4, imageUrl: 'https://imgur.com/Qr9BOE0.jpeg' },
+             { title: '표현의 기술', author: '유시민', date: '2025. 3. 2.', rating: 3, imageUrl: 'https://i.imgur.com/YX8Nrzt.png' },
+             { title: 'The Notebook Trilogy', author: 'Agota Kristof', date: '2025. 3. 8.', rating: 4.8, imageUrl: 'https://imgur.com/M89NJpt.jpeg' },
+             { title: 'The Shadow Docket', author: 'Stephen Vladeck', date: '2025. 3. 14.', rating: 4.3, imageUrl: 'https://i.imgur.com/fERG1D5.jpeg' },
+             { title: 'White Nights', author: 'Fyodor Dostoyevsky', date: '2025. 3. 15.', rating: 3.7, imageUrl: 'https://i.imgur.com/Ljs1lTV.jpeg' },
+             { title: 'On Tyranny', author: 'Timothy Snyder', date: '2025. 3. 16.', rating: 3.7, imageUrl: 'https://i.imgur.com/ye3gaOv.jpeg' },
+             { title: 'M&A 계약의 해부', author: '김성민', date: '2025. 3. 24.', rating: 4, imageUrl: 'https://imgur.com/1AiRMbl.png' },
+             { title: 'On Freedom', author: 'Timothy Snyder', date: '2025. 3. 26.', rating: 3.8, imageUrl: 'https://i.imgur.com/l0jEq2w.jpeg' },
+             { title: 'Source Code', author: 'Bill Gates', date: '2025. 5. 2.', rating: 4.2, imageUrl: 'https://i.imgur.com/cJ6BsNs.jpeg' },
+             { title: '제노사이드', author: '다카노 가즈아키', date: '2025. 5. 13.', rating: 3.6, imageUrl: 'https://i.imgur.com/Redbyde.png' },
+             { title: 'Behave', author: 'Robert Sapolsky', date: '2025. 5. 21.', rating: 4.6, imageUrl: 'https://i.imgur.com/eyIvqgC.jpeg' },
+             { title: 'Revenge of the Tipping Point', author: 'Malcolm Gladwell', date: '2025. 5. 26.', rating: 3.2, imageUrl: 'https://i.imgur.com/NL8zFen.jpeg' },
+             { title: 'Glucose Revolution', author: 'Jessie Inchauspe', date: '2025. 6. 2.', rating: 3.7, imageUrl: 'https://i.imgur.com/mJ1VbdB.jpeg' },
+             { title: 'Discrimination and Disparities', author: 'Thomas Sowell', date: '2025. 6. 27.', rating: 3.9, imageUrl: 'https://i.imgur.com/tuEVGMB.jpeg' },
+             { title: 'Unlocking the Customer Value Chain', author: 'Thales Teixeira', date: '2025. 7. 11.', rating: 4.0, imageUrl: 'https://imgur.com/NBqrhEP.jpg' },
+             { title: '세계 경제 지각 변동', author: '박종훈', date: '2025. 7. 22.', rating: 3.8, imageUrl: 'https://imgur.com/jGyxZpR.jpg' },
+             { title: '열두 발자국', author: '정재승', date: '2025. 7. 24.', rating: 3.7, imageUrl: 'https://imgur.com/PM49Vts.jpg' },
+             { title: '2025 AI 트렌드 100', author: 'Ai100연구소', date: '2025. 7. 30.', rating: 1.4, imageUrl: 'https://imgur.com/5NnVaAX.jpg' },
+             { title: 'Empire of AI', author: 'Karen Hao', date: '2025. 7. 31.', rating: 4.3, imageUrl: 'https://imgur.com/GDa58Ny.jpg' },
+             { title: 'So Late in the Day', author: 'Claire Keegan', date: '2025. 8. 11.', rating: 3.4, imageUrl: 'https://imgur.com/i6lRt8e.jpg' },
+             { title: '이게 되네? 제미나이 노트북LM 미친 활용법 51제', author: '오힘찬', date: '2025. 8. 12.', rating: 2.5, imageUrl: 'https://imgur.com/wHQqQy4.jpg' },
+             { title: 'Make it Stick', author: 'Henry L. Roediger, et al.', date: '2025. 8. 19.', rating: 3.7, imageUrl: 'https://imgur.com/ReaVwNT.jpg' },
+            ];
+
+            // Date Sort
+            bookData.sort((a, b) => {
+                return new Date(a.date.replace(/\s/g, "").slice(0, -1).replace(/\./g, '-')) - new Date(b.date.replace(/\s/g, "").slice(0, -1).replace(/\./g, '-'));
+            });
+
+            // --- Pagination Logic ---
+            const ITEMS_PER_ROW = 3; 
+            const ROWS_PER_PAGE = 3; 
+            const ITEMS_PER_PAGE = ITEMS_PER_ROW * ROWS_PER_PAGE;
+            
+            let currentPage = 1;
+            const totalPages = Math.ceil(bookData.length / ITEMS_PER_PAGE);
+
+            const bookshelfEl = document.getElementById('bookshelf-grid');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const indicator = document.getElementById('page-indicator');
+
+            function createStarRating(rating) {
+                const fullStar = '★';
+                const emptyStar = '☆';
+                const maxStars = 5;
+                let stars = '';
+                let full = Math.round(rating);
+                for (let i = 0; i < maxStars; i++) stars += (i < full) ? fullStar : emptyStar;
+                return stars;
+            }
+
+            function renderShelf(page) {
+                bookshelfEl.classList.add('fade-out');
+
+                setTimeout(() => {
+                    bookshelfEl.innerHTML = ''; 
+                    
+                    const startIdx = (page - 1) * ITEMS_PER_PAGE;
+                    const pageItems = bookData.slice(startIdx, startIdx + ITEMS_PER_PAGE);
+
+                    for (let i = 0; i < ROWS_PER_PAGE; i++) {
+                        const rowEl = document.createElement('div');
+                        rowEl.className = 'shelf-row';
+                        
+                        const rowItems = pageItems.slice(i * ITEMS_PER_ROW, (i + 1) * ITEMS_PER_ROW);
+                        
+                        // Don't draw completely empty rows at the end of data
+                        if (rowItems.length === 0 && pageItems.length <= i * ITEMS_PER_ROW) {
+                            if (i === 0) {} // Unless it's the very first row
+                            else break; 
+                        }
+
+                        rowItems.forEach(book => {
+                            const slot = document.createElement('div');
+                            slot.className = 'book-slot';
+                            
+                            const ratingStars = createStarRating(book.rating);
+
+                            slot.innerHTML = `
+                                <div class="card">
+                                    <div class="card-inner">
+                                        <div class="card-front" style="--bg-image: url('${book.imageUrl}')"></div>
+                                        <div class="card-back">
+                                            <div class="book-title">${book.title}</div>
+                                            <div class="divider-tiny"></div>
+                                            <div class="book-author">${book.author}</div>
+                                            <div class="book-rating">
+                                                ${ratingStars}
+                                                <span class="rating-num">${book.rating}</span>
+                                            </div>
+                                            <div class="book-date">${book.date}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            const card = slot.querySelector('.card');
+                            card.addEventListener('click', () => {
+                                card.classList.toggle('active');
+                            });
+
+                            rowEl.appendChild(slot);
+                        });
+                        
+                        // Fill empty slots for alignment
+                        if (rowItems.length > 0 && rowItems.length < ITEMS_PER_ROW) {
+                            for (let k = 0; k < (ITEMS_PER_ROW - rowItems.length); k++) {
+                                const emptySlot = document.createElement('div');
+                                emptySlot.className = 'book-slot empty-slot';
+                                // Removed inline style style="width: 130px;" to allow CSS control
+                                rowEl.appendChild(emptySlot);
+                            }
+                        }
+
+                        bookshelfEl.appendChild(rowEl);
+                    }
+
+                    indicator.innerHTML = `<span>${page}</span> / ${totalPages}`;
+                    prevBtn.disabled = page === 1;
+                    nextBtn.disabled = page === totalPages;
+
+                    bookshelfEl.classList.remove('fade-out');
+                }, 500);
+            }
+
+            prevBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderShelf(currentPage);
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderShelf(currentPage);
+                }
+            });
+
+            renderShelf(currentPage);
+        });
+    </script>
+</body>
+</html>
